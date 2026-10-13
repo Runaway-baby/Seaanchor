@@ -1,0 +1,78 @@
+BASE_YAML: "COCO-Detection/faster_rcnn_R_101_C4_3x.yaml"
+SEED: 3407
+
+DATASETS:
+        TRAIN: ("nautilus_train",)
+        TEST: ("nautilus_test",)
+DATALOADER:
+        NUM_WORKERS: 16
+        DOMAIN_BALANCE_POWER: 0.5
+INPUT:
+        MIN_SIZE_TRAIN: (600,)
+        MIN_SIZE_TEST: 600
+        CLIP_RANDOM_CROPS: False
+        RANDOM_CROP_SIZE: 400
+
+SOLVER:
+        BASE_LR: 0.001
+        GLOBAL_GRAD_CLIP_NORM: 5.0
+        MAX_CONSECUTIVE_NONFINITE_GRADS: 3
+        ALLOW_TF32: True
+        MAX_ITER: 100000
+        STEPS: [40000,]
+        WARMUP_ITERS: 1000
+        WARMUP_FACTOR: 0.001
+        WARMUP_METHOD: 'linear'
+        IMS_PER_BATCH: 4
+        CHECKPOINT_PERIOD: 10000
+MODEL:
+        BACKBONE:
+                NAME: DINOv3Backbone
+        DINOV3:
+                MODEL_NAME: 'dinov3_vitb16'
+                REPO_DIR: ''
+                WEIGHTS: ''
+                FREEZE: False
+                UNFREEZE_LAST_N_BLOCKS: 4
+                OUT_CHANNELS: 1024
+                ROI_CHANNELS: 2048
+                CLIP_EMBED_DIM: 512
+        WEIGHTS: ""
+        CLIP_IMAGE_ENCODER_NAME: 'RN101'
+        CLIP_PROMPT_DOMAIN: 'underwater'
+        META_ARCHITECTURE: 'ClipRCNNWithClipBackboneAugL1Dis'
+
+        OCIA:
+                ENABLED: True
+                EMBED_DIMS: 512
+                TOKEN_LENGTH: 64
+                SCALE_INIT: 0.001
+                RESIDUAL_SCALE_INIT: 0.0
+                FREQUENCY_RATIO: 0.2
+                MAX_RESIDUAL_SCALE: 0.1
+                ROI_CONSISTENCY_WEIGHT: 0.1
+                LOGIT_CONSISTENCY_WEIGHT: 0.1
+
+        RDM:
+                MULTI_SOURCE: True
+                IMAGE_DOMAIN_LOSS_WEIGHT: 1.0
+                INSTANCE_DOMAIN_LOSS_WEIGHT: 1.0
+                CONTENT_LOSS_WEIGHT: 0.1
+                DIRECTION_LOSS_WEIGHT: 1.0
+
+        PROPOSAL_GENERATOR:
+                NAME: 'SBRPN'
+        ROI_HEADS:
+                NAME: 'ClipRes5ROIHeadsAttn'
+                BATCH_SIZE_PER_IMAGE: 400
+                NUM_CLASSES: 1
+TEST:
+        EVAL_PERIOD: 10000
+        EVAL_SAVE_PERIOD: 10000
+        RUN_SECOND_EVAL: False
+OUTPUT_DIR: "outputs/nautilus"
+VIS_PERIOD: 100000
+OFFSET_OPT_INTERVAL: [1300]
+OFFSET_OPT_ITERS: 5000
+DOMAIN_TEXT_FILE: "configs/domain_text.txt"
+SOURCE_DOMAIN_TEXT: "no color cast and good exposure"

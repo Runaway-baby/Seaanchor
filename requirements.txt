@@ -1,0 +1,14 @@
+# Install the matching PyTorch/torchvision, Detectron2 and DINOv3 environment first.
+# These are direct Python dependencies, not a validated version lock.
+numpy
+Pillow
+fvcore
+iopath
+yacs
+pycocotools
+ftfy
+regex
+tqdm
+opencv-python-headless
+tensorboard
+PyYAML

@@ -1,0 +1,6 @@
+no color cast and good exposure
+no color cast and poor exposure
+moderate color cast and good exposure
+moderate color cast and poor exposure
+severe color cast and good exposure
+severe color cast and poor exposure
